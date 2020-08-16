@@ -2,28 +2,27 @@
 <html>
 <head>
   <title>C's Towers</title>
-  <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="towers.js"></script>
   <style type="text/css">
     div {
-      display: flex;
+      display:        flex;
       flex-direction: column;
-      align-items: center;
+      align-items:    center;
     }
     table {
-      border-color: black;
-      border-style: solid;
-      border-width: 1px;
-      margin:       0px;
-      padding:      0px;
+      border-color:   black;
+      border-style:   solid;
+      border-width:   1px;
       border-spacing: 0px;
     }
-    tr, td {
-      margin:       0px;
-      padding:      0px;
+    table, tr, td {
+      margin:  0px;
+      padding: 0px;
     }
     td {
-      font-size: 30px;
-      text-align:     center;
+      font-size:    30px;
+      text-align:   center;
       width:        2em;
       height:       2em;
       border-color: black;
@@ -31,103 +30,6 @@
       border-width: 1px;
     }
   </style>
-
-  <script>
-    'use strict';
-
-    $(document).ready((event) => {
-      let t = makeLatinSquare(5);
-
-      if (!isLatinSquare(t)) {
-        alert('is not a latin square')
-      }
-
-      generateTable(t);
-
-      console.log('loaded just fine');
-    })
-
-
-    function makeLatinSquare(n) {
-      let t = [];
-
-      for (let i = 0; i < n; i++) {
-        let r = [];
-
-        for (let j = 0; j < n; j++) {
-          r[j] = (3*i+j)%n;
-        }
-
-        t[i] = r;
-      }
-
-      return t;
-    }
-
-
-    function isLatinSquare(t) {
-      let n = t.length;
-      // make sure it's a square with latin rows
-      for (let i = 0; i < n; i++) {
-        let r = t[i];
-        if (n != r.length || !isLatinArray(r, n)) {
-           return false;
-        }
-      }
-      // make sure the columns are latin
-      for (let j = 0; j < n; j++) {
-        // check column j
-        let c = [];
-        for (let i = 0; i < n; i++) {
-          c[i] = t[i][j];
-        }
-        if (!isLatinArray(c, n)) {
-          return false;
-        }
-      }
-
-      return true;
-    }
-
-    function isLatinArray(a, n) {
-      let found = [];
-      for (let j = 0; j < n; j++) {
-        let v = a[j]
-        if (v < 0 || n <= v || found[v]) {
-          return false;
-        }
-        found[v] = true;
-      }
-      return true;
-    }
-
-
-    function generateTable(t) {
-      // get the reference for the table
-      let table = $('<table>');
-
-      // creating all cells
-      for (let i = 0; i < t.length; i++) {
-        // creates a table row
-        let row = $('<tr>');
-        let r = t[i];
-
-        for (let j = 0; j < r.length; j++) {
-          // Create a <td> element and a text node, make the text
-          // node the contents of the <td>, and put the <td> at
-          // the end of the table row
-          let cell = $('<td>').text(r[j]);
-          row.append(cell);
-        }
-
-        // add the row to the end of the table body
-        table.append(row);
-      }
-
-      // put the <tbody> in the <table>
-      $('#main').append(table);
-    }
-  </script>
 </head>
 <body>
   <div id="main">
