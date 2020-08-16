@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.23.0/dist/phaser.js"></script>
+</head>
+<body>
+<script>
+
+
+
+  var config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    // physics: {
+    //   default: 'arcade',
+    //   arcade: {
+    //     gravity: { y: 200 }
+    //   }
+    // },
+    scene: {
+      preload: preload,
+      create: create,
+      update: update,
+    }
+  };
+
+
+  var game = new Phaser.Game(config);
+
+  function preload()
+  {
+    this.load.setBaseURL('http://labs.phaser.io');
+
+    this.load.image('sky', 'assets/skies/space3.png');
+    this.load.image('red', 'assets/particles/red.png');
+  }
+
+
+  function create()
+  {
+    this.add.image(400, 300, 'sky');
+
+    var particles = this.add.particles('red');
+
+    var emitter = particles.createEmitter({
+      speed: 100,
+      x: -999999,
+      y: -999999,
+ //     alpha: { start: 1, end: 0 },
+ //     scale: { start: 1, end: 0 },
+      blendMode: 'ADD',
+    });
+
+    this.input.setDefaultCursor('none');
+
+    this.input.on('pointermove', function (pointer) {
+      var x = pointer.x;
+      var y = pointer.y;
+      var dx = pointer.x - 400;
+      var dy = pointer.y - 300;
+      var scale = 1 - Math.sqrt(dx*dx + dy*dy) / 500;
+
+      emitter.setPosition(x, y);
+      emitter.setScale({ start: scale, end: 0});
+    }, this);
+  }
+
+
+  function update()
+  {
+    // var pointer = this.input.activePointer
+
+    // emitter.setPosition(pointer.x, pointer.y);
+  }
+
+
+</script>
+</body>
+</html>

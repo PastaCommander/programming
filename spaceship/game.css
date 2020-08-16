@@ -1,0 +1,33 @@
+
+* {
+  text-align: center;
+  margin:     0px auto;
+  padding:    0px;
+  border:     0px solid #f00;
+}
+
+p {
+  text-align:   left;
+  width:       500px;
+  margin:       20px;
+  margin-left:  auto;
+  margin-right: auto;
+}
+
+h1 {
+  margin:       20px;
+  margin-left:  auto;
+  margin-right: auto;
+}
+
+h2 {
+  margin:       20px;
+  margin-left:  auto;
+  margin-right: auto;
+  font-style:   italic;
+}
+
+img {
+  display: block;
+}
+

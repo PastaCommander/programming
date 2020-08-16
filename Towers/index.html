@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>C's Towers</title>
+
+  <style type="text/css">
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    table {
+      border-color: black;
+      border-style: solid;
+      border-width: 1px;
+      margin:       0px;
+      padding:      0px;
+      border-spacing: 0px;
+    }
+    tr, td {
+      margin:       0px;
+      padding:      0px;
+    }
+    td {
+      font-size: 30px;
+      text-align:     center;
+      width:        2em;
+      height:       2em;
+      border-color: black;
+      border-style: solid;
+      border-width: 1px;
+    }
+  </style>
+
+  <script>
+    "use strict";
+
+    window.onload = (event) => {
+      let t = makeLatinSquare(5);
+
+      if (!isLatinSquare(t)) {
+        alert("is not a latin square")
+      }
+
+      generateTable(t);
+
+      console.log("loaded just fine");
+    }
+
+
+    function makeLatinSquare(n) {
+      let t = [];
+
+      for (let i = 0; i < n; i++) {
+        let r = [];
+
+        for (let j = 0; j < n; j++) {
+          r[j] = (3*i+j)%n;
+        }
+
+        t[i] = r;
+      }
+
+      return t;
+    }
+
+
+    function isLatinSquare(t) {
+      let n = t.length;
+      // make sure it's a square with latin rows
+      for (let i = 0; i < n; i++) {
+        let r = t[i];
+        if (n != r.length || !isLatinArray(r, n)) {
+           return false;
+        }
+      }
+      // make sure the columns are latin
+      for (let j = 0; j < n; j++) {
+        // check column j
+        let c = [];
+        for (let i = 0; i < n; i++) {
+          c[i] = t[i][j];
+        }
+        if (!isLatinArray(c, n)) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    function isLatinArray(a, n) {
+      let found = [];
+      for (let j = 0; j < n; j++) {
+        let v = a[j]
+        if (v < 0 || n <= v || found[v]) {
+          return false;
+        }
+        found[v] = true;
+      }
+      return true;
+    }
+
+
+
+    function generateTable(t) {
+      // get the reference for the table
+      let tbl = document.getElementById("aTable");
+
+      // creates a <tbody> element
+      let tblBody = document.createElement("tbody");
+
+      // creating all cells
+      for (let i = 0; i < t.length; i++) {
+        // creates a table row
+        let row = document.createElement("tr");
+        let r = t[i];
+
+        for (let j = 0; j < r.length; j++) {
+          // Create a <td> element and a text node, make the text
+          // node the contents of the <td>, and put the <td> at
+          // the end of the table row
+          let cell = document.createElement("td");
+          let cellText = document.createTextNode(r[j]);
+          cell.appendChild(cellText);
+          row.appendChild(cell);
+        }
+
+        // add the row to the end of the table body
+        tblBody.appendChild(row);
+      }
+
+      // put the <tbody> in the <table>
+      tbl.appendChild(tblBody);
+    }
+  </script>
+</head>
+<body>
+  <div>
+    <h1>C's Towers</h1>
+    <table id="aTable"></table>
+  </div>
+</body>
+</html>
