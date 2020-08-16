@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>C's Towers</title>
-
+  <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <style type="text/css">
     div {
       display: flex;
@@ -33,19 +33,19 @@
   </style>
 
   <script>
-    "use strict";
+    'use strict';
 
-    window.onload = (event) => {
+    $(document).ready((event) => {
       let t = makeLatinSquare(5);
 
       if (!isLatinSquare(t)) {
-        alert("is not a latin square")
+        alert('is not a latin square')
       }
 
       generateTable(t);
 
-      console.log("loaded just fine");
-    }
+      console.log('loaded just fine');
+    })
 
 
     function makeLatinSquare(n) {
@@ -102,43 +102,36 @@
     }
 
 
-
     function generateTable(t) {
       // get the reference for the table
-      let tbl = document.getElementById("aTable");
-
-      // creates a <tbody> element
-      let tblBody = document.createElement("tbody");
+      let table = $('<table>');
 
       // creating all cells
       for (let i = 0; i < t.length; i++) {
         // creates a table row
-        let row = document.createElement("tr");
+        let row = $('<tr>');
         let r = t[i];
 
         for (let j = 0; j < r.length; j++) {
           // Create a <td> element and a text node, make the text
           // node the contents of the <td>, and put the <td> at
           // the end of the table row
-          let cell = document.createElement("td");
-          let cellText = document.createTextNode(r[j]);
-          cell.appendChild(cellText);
-          row.appendChild(cell);
+          let cell = $('<td>').text(r[j]);
+          row.append(cell);
         }
 
         // add the row to the end of the table body
-        tblBody.appendChild(row);
+        table.append(row);
       }
 
       // put the <tbody> in the <table>
-      tbl.appendChild(tblBody);
+      $('#main').append(table);
     }
   </script>
 </head>
 <body>
-  <div>
+  <div id="main">
     <h1>C's Towers</h1>
-    <table id="aTable"></table>
   </div>
 </body>
 </html>
