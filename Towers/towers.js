@@ -1,43 +1,116 @@
 'use strict';
 
 
-$(document).ready((event) => {
-  let t = makeLatinSquare(5);
+let latinSquareSize = 5;
 
-  if (!isLatinSquare(t)) {
+
+$(document).ready((event) => {
+  let ls = makeLatinSquare(latinSquareSize);
+
+  if (!isLatinSquare(ls)) {
     alert('is not a latin square')
   }
 
-  generateTable(t);
+  let hints = {
+    top: [],
+    bot: [],
+    lft: [],
+    rgt: [],
+  };
+
+  // populate hints.top
+  for (let j = 0; j < ls.length; j++) {
+    // check column j
+    let c = [];
+    for (let i = 0; i < ls.length; i++) {
+      c[i] = ls[i][j];
+    }
+    hints.top[j] = computeVisible(c);
+  }
+
+  // populate hints.bot
+  for (let j = 0; j < ls.length; j++) {
+    // check column j
+    let c = [];
+    for (let i = 0; i < ls.length; i++) {
+      c[i] = ls[i][j];
+    }
+    hints.bot[j] = computeVisible(c.reverse());
+  }
+
+  // populate hints.lft
+  for (let i = 0; i < ls.length; i++) {
+    hints.lft[i] = computeVisible(ls[i]);
+  }
+
+  // populate hints.rgt
+  for (let i = 0; i < ls.length; i++) {
+    hints.rgt[i] = computeVisible(ls[i].slice().reverse());
+  }
+
+  generateTable(ls, hints);
 
   console.log('loaded just fine');
 })
 
 
+function computeVisible(towers) {
+  let hintN   = 1;
+  let tallest = towers[0];
+  // starting at 1 because towers{0} is always visible
+  for (let i = 1; i < towers.length; i++) {
+    if (towers[i] > tallest) {
+      tallest = towers[i];
+      hintN++;
+    }
+  }
+
+  return hintN;
+}
+
+
 function makeLatinSquare(n) {
-  let t = [];
+  let ls = [];
 
   for (let i = 0; i < n; i++) {
     let r = [];
 
     for (let j = 0; j < n; j++) {
-      r[j] = (3*i+j)%n;
+      r[j] = (1*i+j)%n;
     }
 
-    t[i] = r;
+    ls[i] = r;
   }
 
-  return t;
+
+
+  return ls;
 }
 
 
-function isLatinSquare(t) {
-  let n = t.length;
+function isLatinSquare(ls) {
+  let n = ls.length;
+
+  if (n < 1) {
+    return false;
+  }
+
+  function isLatinArray(a) {
+    let found = [];
+    for (let j = 0; j < n; j++) {
+      let v = a[j]
+      if (v < 0 || n <= v || found[v]) {
+        return false;
+      }
+      found[v] = true;
+    }
+    return true;
+  }
 
   // make sure it's a square with latin rows
   for (let i = 0; i < n; i++) {
-    let r = t[i];
-    if (n != r.length || !isLatinArray(r, n)) {
+    let r = ls[i];
+    if (n != r.length || !isLatinArray(r)) {
        return false;
     }
   }
@@ -47,9 +120,9 @@ function isLatinSquare(t) {
     // check column j
     let c = [];
     for (let i = 0; i < n; i++) {
-      c[i] = t[i][j];
+      c[i] = ls[i][j];
     }
-    if (!isLatinArray(c, n)) {
+    if (!isLatinArray(c)) {
       return false;
     }
   }
@@ -58,42 +131,52 @@ function isLatinSquare(t) {
 }
 
 
-function isLatinArray(a, n) {
-  let found = [];
-  for (let j = 0; j < n; j++) {
-    let v = a[j]
-    if (v < 0 || n <= v || found[v]) {
-      return false;
-    }
-    found[v] = true;
-  }
-  return true;
-}
-
-
-function generateTable(t) {
+function generateTable(ls, hints) {
   // get the reference for the table
   let table = $('<table>');
 
+  // add top hints
+  let row = $('<tr>');
+  row.append($('<td>').addClass('hint'));
+  for (let j = 0; j < hints.top.length; j++) {
+    let cell = $('<td>').addClass('hint').text(hints.top[j]);
+    row.append(cell);
+  }
+  row.append($('<td>').addClass('hint'));
+  table.append(row);
+
   // creating all cells
-  for (let i = 0; i < t.length; i++) {
+  for (let i = 0; i < ls.length; i++) {
     // creates a table row
     let row = $('<tr>');
-    let r = t[i];
+    let r = ls[i];
+
+    row.append($('<td>').addClass('hint').text(hints.lft[i]));
 
     for (let j = 0; j < r.length; j++) {
       // Create a <td> element and a text node, make the text
       // node the contents of the <td>, and put the <td> at
       // the end of the table row
-      let cell = $('<td>').text(r[j]);
+      let cell = $('<td>').addClass('tower').text(r[j]);
       row.append(cell);
     }
 
+    row.append($('<td>').addClass('hint').text(hints.rgt[i]));
     // add the row to the end of the table body
     table.append(row);
   }
 
-  // put the <tbody> in the <table>
+  // add bottom hints
+  row = $('<tr>');
+  row.append($('<td>').addClass('hint'));
+  for (let j = 0; j < hints.bot.length; j++) {
+    let cell = $('<td>').addClass('hint').text(hints.bot[j]);
+    row.append(cell);
+  }
+  row.append($('<td>').addClass('hint'));
+  table.append(row);
+
+  // put the <table> in the <div>
   $('#main').append(table);
 }
 
