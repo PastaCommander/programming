@@ -70,23 +70,43 @@ function computeVisible(towers) {
 
 
 function makeLatinSquare(n) {
+  // build a latin square with shuffled rows, columns, and numbers
   let ls = [];
+  let sr = shuffledN(n);
+  let sc = shuffledN(n);
+  let sn = shuffledN(n);
 
   for (let i = 0; i < n; i++) {
     let r = [];
 
     for (let j = 0; j < n; j++) {
-      r[j] = (1*i+j)%n;
+      r[j] = sn[(sr[i]+sc[j])%n];
     }
 
     ls[i] = r;
   }
 
-
-
   return ls;
 }
 
+
+function shuffledN(n) {
+  let a = [];
+
+  for (let i = 0; i < n; i++) {
+    a[i] = i;
+  }
+
+  return shuffle(a);
+}
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 function isLatinSquare(ls) {
   let n = ls.length;
@@ -157,7 +177,7 @@ function generateTable(ls, hints) {
       // Create a <td> element and a text node, make the text
       // node the contents of the <td>, and put the <td> at
       // the end of the table row
-      let cell = $('<td>').addClass('tower').text(r[j]);
+      let cell = $('<td>').addClass('tower').text(r[j]/*+1*/);
       row.append(cell);
     }
 
